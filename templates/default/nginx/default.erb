@@ -1,0 +1,10 @@
+server {
+  listen   <%= @listen_port %>;
+  server_name  <%= @server_name %>;
+
+  access_log  <%= @logdir %>/<%= @server_name %>.access.log;
+
+  location / {
+    return 200 "<h1>Hi there!</h1>";
+  }
+}

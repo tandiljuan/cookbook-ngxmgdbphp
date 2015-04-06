@@ -28,3 +28,11 @@ node.chef_environment = node[:chef_environment] if node[:chef_environment] != ni
 
 # Core settings
 default[:core][:project_name]   = "NgxMgDBPHP"
+
+# Nginx Settings
+default[:nginx][:default_site_enabled] = false
+default[:nginx][:listen_port]          = 80
+default[:nginx][:server_name]          = node[:hostname]
+override[:nginx][:user]                = node[:core][:user]
+override[:nginx][:group]               = node[:core][:group]
+

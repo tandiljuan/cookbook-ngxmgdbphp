@@ -18,4 +18,5 @@
 #
 
 include_recipe "cookbook-core"
+include_recipe "cookbook-ngxmgdbphp::nginx"
 
