@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cookbook-ngxmgdbpy
-# Recipe:: default
+# Recipe:: mongodb
 #
 # Author:: Juan Manuel Lopez
 #
@@ -17,7 +17,27 @@
 # limitations under the License.
 #
 
-include_recipe "cookbook-core"
-include_recipe "cookbook-ngxmgdbphp::nginx"
-include_recipe "cookbook-ngxmgdbphp::mongodb"
+# Install dependencies needed to compile `mongo` ruby gem.
+# @see  https://sethvargo.com/using-gems-with-chef/
+package 'libsasl2-dev' do
+    action :nothing
+end.run_action(:install)
+
+# Make sure that  mongo gem version 1.12.1 is installed
+# @see https://github.com/edelight/chef-mongodb/issues/386
+chef_gem 'mongo' do
+    version '1.12.1'
+    action :nothing
+end.run_action(:install)
+
+# Install mongodb
+include_recipe "mongodb"
+
+# Setup MongoDB users
+include_recipe "mongodb::user_management"
+
+# Restart mongodb sevice
+service "mongodb" do
+  action :restart
+end
 
