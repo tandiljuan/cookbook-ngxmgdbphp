@@ -51,3 +51,19 @@ template "/etc/php5/fpm/php.ini" do
   action :create
 end
 
+# PHP Pool file
+template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"]) do
+  source "php/pool.conf.erb"
+  owner node[:core][:user]
+  group node[:core][:group]
+  mode 00664
+  variables({
+    :app_name => node[:core][:project_name],
+    :user => node[:cookbook][:php][:fpm][:user],
+    :group => node[:cookbook][:php][:fpm][:group],
+    :listen => node[:cookbook][:php][:fpm][:listen],
+    :listen_backlog => node[:cookbook][:php][:fpm][:listen_backlog],
+  })
+  action :create
+end
+
