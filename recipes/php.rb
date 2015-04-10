@@ -67,3 +67,10 @@ template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"
   action :create
 end
 
+# Enable PHP service
+service "php" do
+  service_name "php5-fpm"
+  supports :reload => true, :restart => true, :start => true, :status => true, :stop => true
+  action [:enable, :restart]
+end
+
