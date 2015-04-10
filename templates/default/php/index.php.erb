@@ -1,3 +1,64 @@
+<?php
+  // @see http://php.net/manual/en/mongo.tutorial.php
+  // @see http://www.sitepoint.com/building-simple-blog-app-mongodb-php/
+
+  $host = '<%= @mongo_host %>';
+  $port = '<%= @mongo_port %>';
+  $ddbb = '<%= @mongo_ddbb %>';
+  $user = '<%= @mongo_user %>';
+  $pass = '<%= @mongo_pass %>';
+
+  $connect_string = sprintf('mongodb://%s:%d/%s', $host, $port, $ddbb);
+  $conn = new Mongo($connect_string, array('username' => $user, 'password' => $pass));
+
+  // select a database
+  $db = $conn->selectDB($ddbb);
+
+  // select a collection (analogous to a relational database's table)
+  $collection = $db->selectCollection('collection');
+?>
 <?php if ($_SERVER['REQUEST_METHOD'] === 'GET'): ?>
-  <?php phpinfo() ?>
+  <h1>List of items</h1>
+  <?php if (!empty($collection->count())): ?>
+    <?php $items = $collection->find() ?>
+    <ul>
+      <?php foreach ($items as $i): ?>
+        <li style="margin:8px 0;">
+          <?= $i['name'] ?>
+          <form method="POST" style="display:inline;">
+            <input type="hidden" name="action" value="delete" />
+            <input type="hidden" name="id" value="<?= $i['_id'] ?>" />
+            <input type="submit" value="Delete" />
+          </form>
+        </li>
+      <?php endforeach ?>
+    </ul>
+  <?php endif ?>
+  <form method="POST">
+    <input type="hidden" name="action" value="insert" />
+    <label for="item">New Item</label>
+    <input type="text" name="item" />
+    <input type="submit" value="Create" />
+  </form>
+<?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+<?php
+  if (!empty($_POST['action']) && $_POST['action'] == 'insert') {
+
+    if (!empty($_POST['item'])) {
+      // add a record
+      $doc = ['name' => $_POST['item']];
+      $collection->insert($doc);
+    }
+
+  } elseif (!empty($_POST['action']) && $_POST['action'] == 'delete') {
+
+    if (!empty($_POST['id'])) {
+      $collection->remove(['_id' => new MongoId($_POST['id'])]);
+    }
+
+  }
+
+  header('Location: /', true, 303);
+  die();
+?>
 <?php endif ?>
