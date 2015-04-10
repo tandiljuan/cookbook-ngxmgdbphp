@@ -74,3 +74,14 @@ service "php" do
   action [:enable, :restart]
 end
 
+# Create a simple demo app, if there is no app
+template File.join([node[:core][:project_path], node[:cookbook][:php][:project][:index]]) do
+  source "php/index.php.erb"
+  owner node[:core][:user]
+  group node[:core][:group]
+  mode 00664
+  only_if do
+    (Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
+  end
+end
+

@@ -53,6 +53,8 @@ default[:cookbook][:php][:fpm][:group] = node[:core][:group]
 default[:cookbook][:php][:fpm][:listen] = '127.0.0.1:9000'
 default[:cookbook][:php][:fpm][:listen_backlog] = 65535
 
+default[:cookbook][:php][:project][:index] = "index.php"
+
 # Nginx Settings
 default[:cookbook][:nginx][:root] = node[:core][:project_path]
 
