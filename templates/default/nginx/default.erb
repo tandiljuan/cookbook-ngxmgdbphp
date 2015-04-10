@@ -1,10 +1,40 @@
+# file: /etc/nginx/sites-enabled/NgxMgDBPHP
+# @see http://www.if-not-true-then-false.com/2011/nginx-and-php-fpm-configuration-and-optimizing-tips-and-tricks/
+
+# Upstream to abstract back-end connection(s) for PHP
+upstream php_fpm {
+  server <%= @php_fpm %>;
+}
+
 server {
   listen   <%= @listen_port %>;
+  <%# listen for ipv6 -%>
+  listen [::]:<%= @listen_port %> default ipv6only=on;
   server_name  <%= @server_name %>;
-
   access_log  <%= @logdir %>/<%= @server_name %>.access.log;
+  error_log  <%= @logdir %>/<%= @server_name %>.error.log;
+  root <%= @root %>;
+
+  charset utf-8;
 
   location / {
-    return 200 "<h1>Hi there!</h1>";
+    index  index.html index.htm index.php;
+  }
+
+  # Prevent (deny) Access to Hidden Files with Nginx
+  location ~ /\. {
+    access_log off;
+    log_not_found off;
+    deny all;
+  }
+
+  location ~ \.php$ {
+    try_files $uri =404;
+    fastcgi_pass php_fpm;
+    fastcgi_index index.php;
+    include /etc/nginx/fastcgi_params;
+
+    client_max_body_size 20m;
+    client_body_buffer_size 128k;
   }
 }

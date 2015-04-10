@@ -54,6 +54,8 @@ default[:cookbook][:php][:fpm][:listen] = '127.0.0.1:9000'
 default[:cookbook][:php][:fpm][:listen_backlog] = 65535
 
 # Nginx Settings
+default[:cookbook][:nginx][:root] = node[:core][:project_path]
+
 default[:nginx][:default_site_enabled] = false
 default[:nginx][:listen_port]          = 80
 default[:nginx][:server_name]          = node[:hostname]
