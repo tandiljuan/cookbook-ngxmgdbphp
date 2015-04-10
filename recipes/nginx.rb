@@ -19,6 +19,16 @@
 
 include_recipe "nginx"
 
+# Set Nginx configuration
+template "/etc/nginx/nginx.conf" do
+  source "nginx/nginx.conf.erb"
+  owner node[:core][:user]
+  group node[:core][:group]
+  mode 00664
+  action :create
+  notifies :restart, "service[nginx]"
+end
+
 # Create Nginx site configuration
 template File.join(["/etc/nginx/sites-available", node[:core][:project_name]]) do
   source "nginx/default.erb"
