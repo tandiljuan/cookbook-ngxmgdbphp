@@ -17,3 +17,8 @@
 # limitations under the License.
 #
 
+# On Ubuntu 14.04 (Trusty Tahr) the default version is 5.5.9
+%w( php5 php5-fpm ).each do |pkg|
+  package pkg
+end
+
