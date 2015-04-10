@@ -29,6 +29,30 @@ node.chef_environment = node[:chef_environment] if node[:chef_environment] != ni
 # Core settings
 default[:core][:project_name]   = "NgxMgDBPHP"
 
+# PHP Settings
+default[:cookbook][:php][:memory_limit] = "128M"
+default[:cookbook][:php][:error_reporting] = "E_ALL & ~E_DEPRECATED & ~E_STRICT"
+default[:cookbook][:php][:display_errors] = true
+default[:cookbook][:php][:display_startup_errors] = true
+default[:cookbook][:php][:post_max_size] = "8M"
+default[:cookbook][:php][:file_uploads] = true
+default[:cookbook][:php][:upload_max_filesize] = "2M"
+default[:cookbook][:php][:max_file_uploads] = 20
+default[:cookbook][:php][:session][:use_cookies] = true
+default[:cookbook][:php][:session][:name] = "PHPSESSID"
+default[:cookbook][:php][:opcache][:enable] = false
+default[:cookbook][:php][:opcache][:enable_cli] = false
+default[:cookbook][:php][:opcache][:memory_consumption] = 128
+default[:cookbook][:php][:opcache][:interned_strings_buffer] = 8
+default[:cookbook][:php][:opcache][:max_accelerated_files] = 4000
+default[:cookbook][:php][:opcache][:revalidate_freq] = 60
+default[:cookbook][:php][:opcache][:save_comments] = true
+default[:cookbook][:php][:opcache][:fast_shutdown] = true
+default[:cookbook][:php][:fpm][:user] = node[:core][:user]
+default[:cookbook][:php][:fpm][:group] = node[:core][:group]
+default[:cookbook][:php][:fpm][:listen] = '127.0.0.1:9000'
+default[:cookbook][:php][:fpm][:listen_backlog] = 65535
+
 # Nginx Settings
 default[:nginx][:default_site_enabled] = false
 default[:nginx][:listen_port]          = 80
