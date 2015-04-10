@@ -22,3 +22,32 @@
   package pkg
 end
 
+# PHP FPM INI configuration file
+template "/etc/php5/fpm/php.ini" do
+  source "php/php.ini.erb"
+  owner node[:core][:user]
+  group node[:core][:group]
+  mode 00664
+  variables({
+    :memory_limit => node[:cookbook][:php][:memory_limit],
+    :error_reporting => node[:cookbook][:php][:error_reporting],
+    :display_errors => node[:cookbook][:php][:display_errors],
+    :display_startup_errors => node[:cookbook][:php][:display_startup_errors],
+    :post_max_size => node[:cookbook][:php][:post_max_size],
+    :file_uploads => node[:cookbook][:php][:file_uploads],
+    :upload_max_filesize => node[:cookbook][:php][:upload_max_filesize],
+    :max_file_uploads => node[:cookbook][:php][:max_file_uploads],
+    :session_use_cookies => node[:cookbook][:php][:session][:use_cookies],
+    :session_name => node[:cookbook][:php][:session][:name],
+    :opcache_enable => node[:cookbook][:php][:opcache][:enable],
+    :opcache_enable_cli => node[:cookbook][:php][:opcache][:enable_cli],
+    :opcache_memory_consumption => node[:cookbook][:php][:opcache][:memory_consumption],
+    :opcache_interned_strings_buffer => node[:cookbook][:php][:opcache][:interned_strings_buffer],
+    :opcache_max_accelerated_files => node[:cookbook][:php][:opcache][:max_accelerated_files],
+    :opcache_revalidate_freq => node[:cookbook][:php][:opcache][:revalidate_freq],
+    :opcache_save_comments => node[:cookbook][:php][:opcache][:save_comments],
+    :opcache_fast_shutdown => node[:cookbook][:php][:opcache][:fast_shutdown],
+  })
+  action :create
+end
+
