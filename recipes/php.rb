@@ -22,6 +22,14 @@
   package pkg
 end
 
+# Enable PHP service
+service "php" do
+  service_name "php5-fpm"
+  provider Chef::Provider::Service::Upstart
+  supports :reload => true, :restart => true, :start => true, :status => true, :stop => true
+  action [:nothing]
+end
+
 # PHP FPM INI configuration file
 template "/etc/php5/fpm/php.ini" do
   source "php/php.ini.erb"
@@ -49,6 +57,7 @@ template "/etc/php5/fpm/php.ini" do
     :opcache_fast_shutdown => node[:cookbook][:php][:opcache][:fast_shutdown],
   })
   action :create
+  notifies :restart, 'service[php]'
 end
 
 # PHP Pool file
@@ -65,13 +74,7 @@ template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"
     :listen_backlog => node[:cookbook][:php][:fpm][:listen_backlog],
   })
   action :create
-end
-
-# Enable PHP service
-service "php" do
-  service_name "php5-fpm"
-  supports :reload => true, :restart => true, :start => true, :status => true, :stop => true
-  action [:enable, :restart]
+  notifies :restart, 'service[php]'
 end
 
 # Create a simple demo app, if there is no app
@@ -90,5 +93,6 @@ template File.join([node[:core][:project_path], node[:cookbook][:php][:project][
   only_if do
     (::Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
   end
+  notifies :restart, 'service[php]'
 end
 
