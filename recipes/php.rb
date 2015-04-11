@@ -88,7 +88,7 @@ template File.join([node[:core][:project_path], node[:cookbook][:php][:project][
     :mongo_pass => node[:cookbook][:mongodb][:user][:pass],
   })
   only_if do
-    (Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
+    (::Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
   end
 end
 
