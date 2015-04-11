@@ -30,7 +30,7 @@ template "/etc/nginx/nginx.conf" do
 end
 
 # Create Nginx site configuration
-template File.join(["/etc/nginx/sites-available", node[:core][:project_name]]) do
+template ::File.join(["/etc/nginx/sites-available", node[:core][:project_name]]) do
   source "nginx/default.erb"
   owner node[:core][:user]
   group node[:core][:group]
@@ -48,8 +48,8 @@ template File.join(["/etc/nginx/sites-available", node[:core][:project_name]]) d
 end
 
 # Enable Nginx site
-link File.join(["/etc/nginx/sites-enabled", node[:core][:project_name]]) do
-  to File.join(["/etc/nginx/sites-available", node[:core][:project_name]])
+link ::File.join(["/etc/nginx/sites-enabled", node[:core][:project_name]]) do
+  to ::File.join(["/etc/nginx/sites-available", node[:core][:project_name]])
   owner node[:core][:user]
   group node[:core][:group]
   action :create
