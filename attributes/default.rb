@@ -56,7 +56,9 @@ default[:cookbook][:php][:fpm][:group] = node[:core][:group]
 default[:cookbook][:php][:fpm][:listen] = '127.0.0.1:9000'
 default[:cookbook][:php][:fpm][:listen_backlog] = 65535
 
+default[:cookbook][:php][:project][:name] = node[:core][:project_name]
 default[:cookbook][:php][:project][:index] = "index.php"
+default[:cookbook][:php][:project][:laravel][:version] = "5.0.22"
 
 # Nginx Settings
 default[:cookbook][:nginx][:root] = node[:core][:project_path]

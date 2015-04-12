@@ -20,24 +20,26 @@
 # Install composer
 include_recipe "composer"
 
-# Create a simple demo app, if there is no app
-template File.join([node[:core][:project_path], node[:cookbook][:php][:project][:index]]) do
-  source "php/index.php.erb"
-  owner node[:core][:user]
+# Install Laravel, if there is no app
+execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:version]})" do
+  cwd node[:core][:project_path]
+  user node[:core][:user]
   group node[:core][:group]
-  mode 00664
-  variables({
-    :mongo_host => node[:cookbook][:mongodb][:host],
-    :mongo_port => node[:cookbook][:mongodb][:port],
-    :mongo_ddbb => node[:cookbook][:mongodb][:ddbb],
-    :mongo_user => node[:cookbook][:mongodb][:user][:name],
-    :mongo_pass => node[:cookbook][:mongodb][:user][:pass],
-  })
-  only_if do
-    (::Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
-  end
+  command <<-SHELL
+    php #{node[:composer][:bin]} \
+      create-project laravel/laravel \
+      --prefer-dist \
+      #{node[:cookbook][:php][:project][:name]} \
+      #{node[:cookbook][:php][:project][:laravel][:version]}
+
+    chmod a+x #{node[:cookbook][:php][:project][:name]}/artisan
+  SHELL
+  action :run
   notifies :restart, "service[mongodb]"
   notifies :restart, 'service[php]'
   notifies :restart, "service[nginx]"
+  only_if do
+    (::Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
+  end
 end
 
