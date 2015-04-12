@@ -18,7 +18,7 @@
 #
 
 # On Ubuntu 14.04 (Trusty Tahr) the default version is 5.5.9
-%w( php5-fpm ).each do |pkg|
+%w( php5-fpm php5-mongo ).each do |pkg|
   package pkg
 end
 
