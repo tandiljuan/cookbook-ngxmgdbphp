@@ -37,7 +37,7 @@ default[:cookbook][:php][:display_startup_errors] = true
 default[:cookbook][:php][:post_max_size] = "8M"
 default[:cookbook][:php][:file_uploads] = true
 default[:cookbook][:php][:upload_max_filesize] = "2M"
-default[:cookbook][:php][:max_file_uploads] = 20
+default[:cookbook][:php][:max_file_uploads] = 20 # Mega
 
 default[:cookbook][:php][:session][:use_cookies] = true
 default[:cookbook][:php][:session][:name] = "PHPSESSID"
@@ -61,7 +61,9 @@ default[:cookbook][:php][:project][:index] = "index.php"
 default[:cookbook][:php][:project][:laravel][:version] = "5.0.22"
 
 # Nginx Settings
-default[:cookbook][:nginx][:root] = node[:core][:project_path]
+default[:cookbook][:nginx][:root] = ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "public"])
+default[:cookbook][:nginx][:max_body_size] = "#{node[:cookbook][:php][:max_file_uploads]}m"
+default[:cookbook][:nginx][:body_buffer_size] = "128k"
 
 default[:nginx][:default_site_enabled] = false
 default[:nginx][:listen_port]          = 80

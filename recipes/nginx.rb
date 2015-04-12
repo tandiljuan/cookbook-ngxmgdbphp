@@ -42,6 +42,8 @@ template ::File.join(["/etc/nginx/sites-available", node[:core][:project_name]])
     :logdir => node['nginx']['log_dir'],
     :php_fpm => node[:cookbook][:php][:fpm][:listen],
     :root => node[:cookbook][:nginx][:root],
+    :max_body_size => node[:cookbook][:nginx][:max_body_size],
+    :body_buffer_size => node[:cookbook][:nginx][:body_buffer_size],
   })
   action :create
   notifies :restart, "service[nginx]"

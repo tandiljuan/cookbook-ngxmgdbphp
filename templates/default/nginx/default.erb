@@ -1,24 +1,45 @@
 # file: /etc/nginx/sites-enabled/NgxMgDBPHP
 # @see http://www.if-not-true-then-false.com/2011/nginx-and-php-fpm-configuration-and-optimizing-tips-and-tricks/
+# @see http://stackoverflow.com/a/27974023
 
 # Upstream to abstract back-end connection(s) for PHP
-upstream php_fpm {
+upstream <%= @app_name %> {
   server <%= @php_fpm %>;
 }
 
 server {
-  listen   <%= @listen_port %>;
-  <%# listen for ipv6 -%>
+  listen <%= @listen_port %>;
   listen [::]:<%= @listen_port %> default ipv6only=on;
   server_name  <%= @server_name %>;
-  access_log  <%= @logdir %>/<%= @server_name %>.access.log;
-  error_log  <%= @logdir %>/<%= @server_name %>.error.log;
   root <%= @root %>;
 
   charset utf-8;
 
+  access_log  <%= @logdir %>/<%= @app_name %>.access.log;
+  error_log  <%= @logdir %>/<%= @app_name %>.error.log;
+
+  error_page 404 /index.php;
+
+  index index.php;
+
+  location = /favicon.ico { access_log off; log_not_found off; }
+  location = /robots.txt  { access_log off; log_not_found off; }
+
   location / {
-    index  index.html index.htm index.php;
+    try_files $uri $uri/ /index.php?$query_string;
+  }
+
+  # Pass the PHP scripts to FastCGI server
+  location ~ \.php$ {
+    try_files $uri /index.php =404;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    fastcgi_pass <%= @app_name %>;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+
+    client_max_body_size <%= @max_body_size %>;
+    client_body_buffer_size <%= @body_buffer_size %>;
   }
 
   # Prevent (deny) Access to Hidden Files with Nginx
@@ -26,15 +47,5 @@ server {
     access_log off;
     log_not_found off;
     deny all;
-  }
-
-  location ~ \.php$ {
-    try_files $uri =404;
-    fastcgi_pass php_fpm;
-    fastcgi_index index.php;
-    include /etc/nginx/fastcgi_params;
-
-    client_max_body_size 20m;
-    client_body_buffer_size 128k;
   }
 }
