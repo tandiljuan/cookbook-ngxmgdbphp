@@ -21,4 +21,5 @@ include_recipe "cookbook-core"
 include_recipe "cookbook-ngxmgdbphp::mongodb"
 include_recipe "cookbook-ngxmgdbphp::php"
 include_recipe "cookbook-ngxmgdbphp::nginx"
+include_recipe "cookbook-ngxmgdbphp::bootstrap"
 
