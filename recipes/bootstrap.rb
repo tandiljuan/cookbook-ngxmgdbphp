@@ -17,6 +17,9 @@
 # limitations under the License.
 #
 
+# Install composer
+include_recipe "composer"
+
 # Create a simple demo app, if there is no app
 template File.join([node[:core][:project_path], node[:cookbook][:php][:project][:index]]) do
   source "php/index.php.erb"
