@@ -83,3 +83,12 @@ template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"
   notifies :restart, 'service[php]'
 end
 
+execute "Enable PHP mcrypt module" do
+  command <<-SHELL
+    php5enmod mcrypt
+  SHELL
+  action :run
+  notifies :restart, 'service[php]'
+  not_if "php -i | grep mcrypt"
+end
+
