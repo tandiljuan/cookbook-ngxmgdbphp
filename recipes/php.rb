@@ -77,22 +77,3 @@ template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"
   notifies :restart, 'service[php]'
 end
 
-# Create a simple demo app, if there is no app
-template File.join([node[:core][:project_path], node[:cookbook][:php][:project][:index]]) do
-  source "php/index.php.erb"
-  owner node[:core][:user]
-  group node[:core][:group]
-  mode 00664
-  variables({
-    :mongo_host => node[:cookbook][:mongodb][:host],
-    :mongo_port => node[:cookbook][:mongodb][:port],
-    :mongo_ddbb => node[:cookbook][:mongodb][:ddbb],
-    :mongo_user => node[:cookbook][:mongodb][:user][:name],
-    :mongo_pass => node[:cookbook][:mongodb][:user][:pass],
-  })
-  only_if do
-    (::Dir.entries(node[:core][:project_path]) - [".dumb"]).size <= 2
-  end
-  notifies :restart, 'service[php]'
-end
-
