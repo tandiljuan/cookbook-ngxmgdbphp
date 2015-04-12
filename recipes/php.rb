@@ -67,7 +67,7 @@ template "/etc/php5/fpm/php.ini" do
 end
 
 # PHP Pool file
-template File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"]) do
+template ::File.join(["/etc/php5/fpm/pool.d", "#{node[:core][:project_name]}.conf"]) do
   source "php/pool.conf.erb"
   owner node[:core][:user]
   group node[:core][:group]
