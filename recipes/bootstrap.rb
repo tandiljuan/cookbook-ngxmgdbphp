@@ -47,22 +47,25 @@ execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:v
 end
 
 # Update project dependencies
-if ::File.exists?(::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "composer.json"]))
-
-  composer_project ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]]) do
-    dev true
-    quiet false
-    prefer_dist true
-    user node[:core][:user]
-    group node[:core][:group]
-    action :update
+execute "Update project #{node[:cookbook][:php][:project][:name]} (with composer)" do
+  cwd ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]])
+  user node[:core][:user]
+  group node[:core][:group]
+  command <<-SHELL.gsub(/\s+/, ' ').strip!
+    php #{node[:composer][:bin]} \
+      update \
+      --prefer-dist \
+      --dev \
+      --verbose
+  SHELL
+  action :run
+  timeout 1200 # 20 minutes
+  ignore_failure true
+  notifies :restart, "service[mongodb]"
+  notifies :restart, 'service[php]'
+  notifies :restart, "service[nginx]"
+  only_if do
+    ::File.exists?(::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "composer.json"]))
   end
-
-  log "Restart Services" do
-    notifies :restart, "service[mongodb]"
-    notifies :restart, 'service[php]'
-    notifies :restart, "service[nginx]"
-  end
-
 end
 
