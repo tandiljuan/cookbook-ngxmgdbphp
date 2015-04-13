@@ -60,6 +60,8 @@ default[:cookbook][:php][:project][:name]                    = node[:core][:proj
 default[:cookbook][:php][:project][:index]                   = "index.php"
 default[:cookbook][:php][:project][:laravel][:version]       = "5.0.22"
 
+default[:cookbook][:php][:composer][:cache_path]             = "/opt/cache/composer"
+
 # Nginx Settings
 default[:cookbook][:nginx][:root]                = ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "public"])
 default[:cookbook][:nginx][:max_body_size]       = "#{node[:cookbook][:php][:max_file_uploads]}m"

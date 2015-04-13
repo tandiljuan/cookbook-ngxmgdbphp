@@ -23,6 +23,15 @@ include_recipe "composer"
 # Install git (some modules needs to be cloned with git)
 package "git"
 
+# Create directory to be used as Composer cache
+directory node[:cookbook][:php][:composer][:cache_path] do
+  user node[:core][:user]
+  group node[:core][:group]
+  recursive true
+  mode '0755'
+  action :create
+end
+
 # Install Laravel, if there is no app
 execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:version]})" do
   cwd node[:core][:project_path]
@@ -37,6 +46,9 @@ execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:v
 
     chmod a+x #{node[:cookbook][:php][:project][:name]}/artisan
   SHELL
+  environment ({
+    "HOME" => node[:cookbook][:php][:composer][:cache_path],
+  })
   action :run
   notifies :restart, "service[mongodb]"
   notifies :restart, 'service[php]'
@@ -58,6 +70,9 @@ execute "Update project #{node[:cookbook][:php][:project][:name]} (with composer
       --dev \
       --verbose
   SHELL
+  environment ({
+    "HOME" => node[:cookbook][:php][:composer][:cache_path],
+  })
   action :run
   timeout 1200 # 20 minutes
   ignore_failure true
