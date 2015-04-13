@@ -58,5 +58,11 @@ if ::File.exists?(::File.join([node[:core][:project_path], node[:cookbook][:php]
     action :update
   end
 
+  log "Restart Services" do
+    notifies :restart, "service[mongodb]"
+    notifies :restart, 'service[php]'
+    notifies :restart, "service[nginx]"
+  end
+
 end
 
