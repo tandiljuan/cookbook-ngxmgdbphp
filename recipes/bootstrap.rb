@@ -20,6 +20,9 @@
 # Install composer
 include_recipe "composer"
 
+# Install git (some modules needs to be cloned with git)
+package "git"
+
 # Install Laravel, if there is no app
 execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:version]})" do
   cwd node[:core][:project_path]
