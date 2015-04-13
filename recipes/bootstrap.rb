@@ -47,12 +47,16 @@ execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:v
 end
 
 # Update project dependencies
-composer_project ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]]) do
-  dev true
-  quiet false
-  prefer_dist true
-  user node[:core][:user]
-  group node[:core][:group]
-  action :update
+if ::File.exists?(::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "composer.json"]))
+
+  composer_project ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]]) do
+    dev true
+    quiet false
+    prefer_dist true
+    user node[:core][:user]
+    group node[:core][:group]
+    action :update
+  end
+
 end
 
