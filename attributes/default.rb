@@ -66,6 +66,10 @@ default[:cookbook][:php][:composer][:cache_path]             = "/opt/cache/compo
 default[:cookbook][:nginx][:root]                = ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "public"])
 default[:cookbook][:nginx][:max_body_size]       = "#{node[:cookbook][:php][:max_file_uploads]}m"
 default[:cookbook][:nginx][:body_buffer_size]    = "128k"
+default[:cookbook][:nginx][:auth][:enabled]      = false
+default[:cookbook][:nginx][:auth][:credentials]  = [
+    {:user => 'user', :pass => '1q2w3e4r' },
+]
 
 default[:nginx][:default_site_enabled]           = false
 default[:nginx][:listen_port]                    = 80
