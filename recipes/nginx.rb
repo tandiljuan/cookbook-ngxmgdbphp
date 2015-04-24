@@ -19,6 +19,26 @@
 
 include_recipe "nginx"
 
+# Set Nginx Basic Authentication
+# @see http://httpd.apache.org/docs/2.2/misc/password_encryptions.html#basic
+if node[:cookbook][:nginx][:auth][:enabled]
+    require 'digest/sha1'
+    require 'base64'
+
+    auth_content = ''
+
+    node[:cookbook][:nginx][:auth][:credentials].each do |credential|
+        auth_content += "#{credential[:user]}:{SHA}" + Base64.encode64(Digest::SHA1.digest(credential[:pass]))
+    end
+
+    file '/etc/nginx/htpasswd' do
+        owner node[:core][:user]
+        group node[:core][:group]
+        mode 00664
+        content auth_content
+    end
+end
+
 # Set Nginx configuration
 template "/etc/nginx/nginx.conf" do
   source "nginx/nginx.conf.erb"
