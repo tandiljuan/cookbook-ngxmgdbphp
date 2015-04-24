@@ -25,6 +25,9 @@ template "/etc/nginx/nginx.conf" do
   owner node[:core][:user]
   group node[:core][:group]
   mode 00664
+  variables({
+    :user => node[:core][:user],
+  })
   action :create
   notifies :restart, "service[nginx]"
 end
