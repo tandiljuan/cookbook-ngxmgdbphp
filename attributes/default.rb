@@ -68,7 +68,7 @@ default[:cookbook][:laravel][:env][:APP_DEBUG]  = (%w( production ).include? nod
 
 require 'digest'
 
-default[:cookbook][:laravel][:env][:APP_KEY]    = (::Digest::SHA256.hexdigest ::Time.now.to_s)
+default[:cookbook][:laravel][:env][:APP_KEY]    = (::Digest::MD5.hexdigest ::Time.now.to_s)
 
 # Nginx Settings
 default[:cookbook][:nginx][:root]                = ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "public"])
