@@ -62,6 +62,14 @@ default[:cookbook][:php][:project][:laravel][:version]       = "5.0.22"
 
 default[:cookbook][:php][:composer][:cache_path]             = "/opt/cache/composer"
 
+# Laravel
+default[:cookbook][:laravel][:env][:APP_ENV]    = node.chef_environment
+default[:cookbook][:laravel][:env][:APP_DEBUG]  = (%w( production ).include? node.chef_environment) ? 'false' : 'true'
+
+require 'digest'
+
+default[:cookbook][:laravel][:env][:APP_KEY]    = (::Digest::SHA256.hexdigest ::Time.now.to_s)
+
 # Nginx Settings
 default[:cookbook][:nginx][:root]                = ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], "public"])
 default[:cookbook][:nginx][:max_body_size]       = "#{node[:cookbook][:php][:max_file_uploads]}m"
