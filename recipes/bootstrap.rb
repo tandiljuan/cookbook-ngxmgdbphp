@@ -58,6 +58,19 @@ execute "Install Laravel (version #{node[:cookbook][:php][:project][:laravel][:v
   end
 end
 
+# Create `.env` file
+dot_env = ''
+node[:cookbook][:laravel][:env].each do |key, value|
+    dot_env += "#{key}=#{value}\n"
+end
+
+file ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name], ".env"]) do
+  content dot_env
+  owner node[:core][:user]
+  group node[:core][:group]
+  mode 00664
+end
+
 # Update project dependencies
 execute "Update project #{node[:cookbook][:php][:project][:name]} (with composer)" do
   cwd ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]])
