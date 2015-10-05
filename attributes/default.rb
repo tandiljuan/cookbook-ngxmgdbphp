@@ -58,7 +58,7 @@ default[:cookbook][:php][:fpm][:listen_backlog]              = 65535
 
 default[:cookbook][:php][:project][:name]                    = node[:core][:project_name]
 default[:cookbook][:php][:project][:index]                   = "index.php"
-default[:cookbook][:php][:project][:laravel][:version]       = "5.0.22"
+default[:cookbook][:php][:project][:laravel][:version]       = "5.1.11"
 
 default[:cookbook][:php][:composer][:cache_path]             = "/opt/cache/composer"
 
