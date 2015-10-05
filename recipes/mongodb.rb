@@ -23,11 +23,16 @@ package 'libsasl2-dev' do
     action :nothing
 end.run_action(:install)
 
-# Make sure that  mongo gem version 1.12.1 is installed
+# Make sure that the following gems are installed at compile time
 # @see https://github.com/edelight/chef-mongodb/issues/386
 chef_gem 'mongo' do
-    version '1.12.1'
-    action :nothing
+  version '1.12.1'
+  action :nothing
+end.run_action(:install)
+
+chef_gem 'bson_ext' do
+  version '1.12'
+  action :nothing
 end.run_action(:install)
 
 # Install mongodb
