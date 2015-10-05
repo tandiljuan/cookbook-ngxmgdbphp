@@ -76,11 +76,15 @@ execute "Update project #{node[:cookbook][:php][:project][:name]} (with composer
   cwd ::File.join([node[:core][:project_path], node[:cookbook][:php][:project][:name]])
   user node[:core][:user]
   group node[:core][:group]
-  command <<-SHELL.gsub(/\s+/, ' ').strip!
+  command <<-SHELL
+    php artisan clear-compiled
+
     php #{node[:composer][:bin]} \
       update \
       --prefer-dist \
       --verbose
+
+    php artisan optimize
   SHELL
   environment ({
     "HOME" => node[:cookbook][:php][:composer][:cache_path],
