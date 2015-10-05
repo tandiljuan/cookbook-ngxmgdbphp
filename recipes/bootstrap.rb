@@ -80,7 +80,6 @@ execute "Update project #{node[:cookbook][:php][:project][:name]} (with composer
     php #{node[:composer][:bin]} \
       update \
       --prefer-dist \
-      --dev \
       --verbose
   SHELL
   environment ({
